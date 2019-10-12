@@ -16,6 +16,7 @@
         </center>
       </ul>
     </div>
+    <img class="bottom_right" src="https://media.giphy.com/media/f4UrSDcyPrYh1KVJjM/giphy.gif">
   </body>
 
 </html>
@@ -30,10 +31,16 @@
     src: url(ARCADE_N.TTF);
   }
   body {
+    color: #ffea00;
+    text-shadow: -2px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
     background-color: #f7fc6d;
     font-family: "04b-30";
   }
-
+  .shadow {
+    -webkit-box-shadow: 10px 10px 7px -1px rgba(0,0,0,0.25);
+    -moz-box-shadow: 10px 10px 7px -1px rgba(0,0,0,0.25);
+    box-shadow: 10px 10px 7px -1px rgba(0,0,0,0.25);
+  }
   .center {
     margin: 0;
     position: absolute;
@@ -42,7 +49,14 @@
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
   }
-
+  .bottom_right {
+    margin : 0;
+    position: absolute;
+    top: 90%;
+    left:95%;
+    -ms-transform: translate(-80%, -80%);
+    transform: translate(-80%, -80%);
+  }
   .zoom {
     transition: width 1.5s, height 1.5s, transform 1.5s;
     -moz-transition: width 1.5s, height 1.5s, -moz-transform 1.5s;
@@ -68,5 +82,5 @@
   ul.navbar a {
     text-decoration: none;
   }
-  
+
 </style>
