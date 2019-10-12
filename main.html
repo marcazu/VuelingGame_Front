@@ -3,23 +3,33 @@
 <head>
 <title>VUELING GAME</title>
   <body>
-    <h1><center>MENU</center></h1>
+    <div class="center">
+      <h1><center>MENU</center></h1>
 
-    <!-- Menu de navegació -->
-    <ul class="navbar">
-      <center>
-      <li><a href="ranking.html"><img class="zoom" src="https://img.icons8.com/ios-filled/100/000000/gold-medal.png"; width="90" ></a>
-      <li><a href="play.html"><img class="zoom" src="https://img.icons8.com/ios-filled/100/000000/play-button-circled.png";></a>
-      <li><a href="about.html"><img class="zoom" src="https://img.icons8.com/pastel-glyph/128/000000/file.png"; width="100"></a>
-      </center>
-    </ul>
-    <script></script>
+      <!-- Menu de navegació -->
+      <ul class="navbar">
+        <center>
+          <li><a href="ranking.html"><img class="zoom" src="https://img.icons8.com/ios-filled/100/000000/gold-medal.png"; width="90" ></a>
+          <li><a href="play.html"><img class="zoom" src="https://img.icons8.com/ios-filled/100/000000/play-button-circled.png";></a>
+          <li><a href="about.html"><img class="zoom" src="https://img.icons8.com/pastel-glyph/128/000000/file.png"; width="100"></a>
+        </center>
+      </ul>
 
     <style type="text/css">
       body {
         background-color: #f7fc6d;
         font-family: "04b-30";
       }
+
+      .center {
+        margin: 0;
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+
       .zoom {
         transition: width 1.5s, height 1.5s, transform 1.5s;
         -moz-transition: width 1.5s, height 1.5s, -moz-transform 1.5s;
@@ -41,16 +51,13 @@
         display: inline;
         margin: 10px 20px 10px 20px;
       }
-      .center navbar{
-        top: 50%;
-        left: 50%;
-      }
 
       ul.navbar a {
         text-decoration: none;
       }
     </style>
-</style>
+    </style>
+  </div>
 </head>
 </body>
 </html>
