@@ -2,13 +2,17 @@ let order = [];
 let playerOrder = [];
 let flash;
 let turn;
-let good;
 let compTurn;
 let intervalId;
 let noise = true;
 let on = false;
 let win;
-let array = array_que_me_han_pasado!!!!!!!
+let array = [1, 2, 3, 0];
+let sequence;
+let timer = 10;
+var session = {
+	'turno': []
+};
 
 const turnCounter = document.querySelector("#turn");
 const topLeft = document.querySelector("#topleft");
@@ -37,18 +41,44 @@ startButton.addEventListener('click', (event) => {
 	}
 });
 
+websocket = new WebSocket("ws://127.0.0.1:6789/");
+websocket.onmessage = function (event) {
+	data = JSON.parse(event.data);
+    switch (data.type) {
+        case 'round':
+			sequence = data.sequence;
+            round.textContent = data.round;
+			document.getElementById("round").innerHTML = data.value.toString();
+            break;
+		case 'timer':
+			timer.textContent = data.timer;
+			document.getElementById("timer").innerHTML = data.value.toString();
+			break;
+		default:
+			console.error("unsupported event", data);
+    }
+};
+
+setInterval(function() {
+  timer = timer - 1;
+  document.getElementById("timer").innerHTML = timer + "s ";
+  if (timer < 0) {
+    clearInterval();
+    document.getElementById("timer").innerHTML = "EXPIRED";
+  }
+}, 1000);
+
 function play() {
 	win = false;
 	order = [];
 	playerOrder = [];
 	flash = 0;
 	intervalId = 0;
-	turn = 1;
+	turn = array.length;
 	turnCounter.innerHTML = 1;
-	good = true;
 	console.log(array.length);
 	for (var i = 0; i < array.length; i++) {
-		order.push(array[i] + 1);
+		order.push(array[i]);
 	}
 	compTurn = true;
 	intervalId = setInterval(gameTurn, 800);
@@ -65,10 +95,10 @@ function gameTurn() {
 	if (compTurn) {
 		clearColor();
 		setTimeout(() => {
-			if (order[flash] == 1) one();
-			if (order[flash] == 2) two();
-			if (order[flash] == 3) three();
-			if (order[flash] == 4) four();
+			if (order[flash] == 0) one();
+			if (order[flash] == 1) two();
+			if (order[flash] == 2) three();
+			if (order[flash] == 3) four();
 			flash++;
 		}, 200);
 	}
@@ -126,7 +156,7 @@ function flashColor() {
 
 topLeft.addEventListener('click', (event) => {
 	if (on) {
-		playerOrder.push(1);
+		playerOrder.push(0);
 		check();
 		one();
 		if(!win) {
@@ -139,7 +169,7 @@ topLeft.addEventListener('click', (event) => {
 
 topRight.addEventListener('click', (event) => {
 	if (on) {
-		playerOrder.push(2);
+		playerOrder.push(1);
 		check();
 		two();
 		if(!win) {
@@ -152,7 +182,7 @@ topRight.addEventListener('click', (event) => {
 
 bottomLeft.addEventListener('click', (event) => {
 	if (on) {
-		playerOrder.push(3);
+		playerOrder.push(2);
 		check();
 		three();
 		if(!win) {
@@ -165,7 +195,7 @@ bottomLeft.addEventListener('click', (event) => {
 
 bottomRight.addEventListener('click', (event) => {
 	if (on) {
-		playerOrder.push(4);
+		playerOrder.push(3);
 		check();
 		four();
 		if(!win) {
@@ -177,22 +207,14 @@ bottomRight.addEventListener('click', (event) => {
 })
 
 function check() {
-  if (playerOrder[playerOrder.length - 1] !== order[playerOrder.length - 1])
-    good = false;
-	if (playerOrder.length == array.length && good) {
+	if (playerOrder.length == array.length){
+		session.turno.push(playerOrder);
+		console.log(session);
 		winGame();
 	}
-	if (good == false) {
-		flashColor();
-		turnCounter.innerHTML = "NO!";
-		setTimeout(() => {
-			turnCounter.innerHTML = turn;
-			clearColor();
-			play();
-		}, 800);
-		noise = false;
-	}
-	if (turn == playerOrder.length && good && !win) {
+	if (turn == playerOrder.length && !win){
+		session.turno.push(playerOrder);
+		console.log(session);
 		turn++;
 		playerOrder = [];
 		compTurn = true;
@@ -204,13 +226,7 @@ function check() {
 
 function winGame() {
 	flashColor();
-	turnCounter.innerHTML = "WIN!";
+	turnCounter.innerHTML = "DONE";
 	on = false;
 	win = true;
 }
-
-
-
-
-
-

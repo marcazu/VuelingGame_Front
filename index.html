@@ -40,27 +40,5 @@
 		</div>
 	</div>
 	<script  src="js/index.js"></script>
-
-	<script>
-        var timer = document.querySelector('.timer'),
-        websocket = new WebSocket("ws://127.0.0.1:6789/");
-        websocket.onmessage = function (event) {
-			data = JSON.parse(event.data);
-            switch (data.type) {
-                case 'round':
-					var sequence = data.sequence;
-                    round.textContent = data.round;
-					document.getElementById("round").innerHTML = data.value.toString();
-                    break;
-				case 'timer':
-					timer.textContent = data.timer;
-					document.getElementById("timer").innerHTML = data.value.toString();
-					break;
-                default:
-					console.error(
-                    "unsupported event", data);
-            }
-        };
-    </script>
 </body>
 </html>
