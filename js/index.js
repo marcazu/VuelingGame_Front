@@ -2,14 +2,14 @@ let order = [];
 let playerOrder = [];
 let flash;
 let turn;
+let flashesCount;
 let compTurn;
 let intervalId;
 let noise = true;
 let on = false;
 let win;
-let array = [1, 2, 3, 0];
-let sequence;
-let timer = 10;
+let array;
+let round;
 var session = {
 	'turno': []
 };
@@ -46,42 +46,36 @@ websocket.onmessage = function (event) {
 	data = JSON.parse(event.data);
     switch (data.type) {
         case 'round':
-			sequence = data.sequence;
-            round.textContent = data.round;
-			document.getElementById("round").innerHTML = data.value.toString();
+			console.log(data);
+			array = data.sequence;
+			win = false;
+			order = [];
+			playerOrder = [];
+			flash = 0;
+			intervalId = 0;
+			turn = array.length;
+			flashesCount = 0;
+			turnCounter.innerHTML = 1;
+			for (var i = 0; i < array.length; i++) {
+				order.push(array[i]);
+			}
+			compTurn = true;
+			intervalId = setInterval(gameTurn, 800);
             break;
 		case 'timer':
-			timer.textContent = data.timer;
-			document.getElementById("timer").innerHTML = data.value.toString();
+			document.getElementById("timer").innerHTML = data.value + "s ";
+			break;
+		case 'users':
+			break;
+		case 'state':
 			break;
 		default:
 			console.error("unsupported event", data);
     }
 };
 
-setInterval(function() {
-  timer = timer - 1;
-  document.getElementById("timer").innerHTML = timer + "s ";
-  if (timer < 0) {
-    clearInterval();
-    document.getElementById("timer").innerHTML = "EXPIRED";
-  }
-}, 1000);
-
 function play() {
-	win = false;
-	order = [];
-	playerOrder = [];
-	flash = 0;
-	intervalId = 0;
-	turn = array.length;
-	turnCounter.innerHTML = 1;
-	console.log(array.length);
-	for (var i = 0; i < array.length; i++) {
-		order.push(array[i]);
-	}
-	compTurn = true;
-	intervalId = setInterval(gameTurn, 800);
+	websocket.send(JSON.stringify({action: 'start'}));
 }
 
 function gameTurn() {
@@ -101,6 +95,10 @@ function gameTurn() {
 			if (order[flash] == 3) four();
 			flash++;
 		}, 200);
+	}
+	++flashesCount;
+	if(flashesCount == turn) {
+		websocket.send(JSON.stringify({action: 'play'}));
 	}
 }
 
@@ -209,12 +207,10 @@ bottomRight.addEventListener('click', (event) => {
 function check() {
 	if (playerOrder.length == array.length){
 		session.turno.push(playerOrder);
-		console.log(session);
 		winGame();
 	}
 	if (turn == playerOrder.length && !win){
 		session.turno.push(playerOrder);
-		console.log(session);
 		turn++;
 		playerOrder = [];
 		compTurn = true;
